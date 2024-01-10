@@ -1,0 +1,426 @@
+<template>
+  <div>
+    <div class="search">
+      <el-input placeholder="请输入商家账号" style="width: 200px" v-model="username"></el-input>
+      <el-input placeholder="请输入商家名称" style="width: 200px; margin-left: 10px" v-model="name"></el-input>
+      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
+      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+    </div>
+
+    <div class="operation">
+      <el-button type="primary" plain @click="handleAdd">新增</el-button>
+      <el-button type="danger" plain @click="delBatch">批量删除</el-button>
+    </div>
+
+    <div class="table">
+      <el-table :data="tableData" strip @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="id" label="序号" width="70" align="center" sortable fixed></el-table-column>
+        <el-table-column prop="name" label="商家名称" width="100" fixed show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="username" label="账号" width="100" fixed></el-table-column>
+        <el-table-column label="Logo" width="100">
+          <template v-slot="scope">
+            <div style="display: flex; align-items: center">
+              <el-image style="width: 40px; height: 40px; border-radius: 50%" v-if="scope.row.avatar"
+                        :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]"></el-image>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="role" label="角色" width="100"></el-table-column>
+        <el-table-column prop="phone" label="电话" width="100"></el-table-column>
+        <el-table-column prop="info" label="简介" width="100" show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="startTime,endTime" label="营业时间" width="100">
+          <template slot-scope="scope">
+            {{scope.row.startTime}}-{{scope.row.endTime}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="address" label="地址" width="100" show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="type" label="餐饮类型" width="100"></el-table-column>
+
+        <el-table-column prop="license" label="营业执照" align="center">
+          <template v-slot="scope">
+            <div style="display: flex; align-items: center">
+              <el-image style="object-fit: cover" v-if="scope.row.license"
+                        :src="scope.row.license" :preview-src-list="[scope.row.license]"></el-image>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="审核状态" align="center">
+          <template v-slot="scope">
+            <el-tag type="info" v-if="scope.row.status === '待审核'">待审核</el-tag>
+            <el-tag type="success" v-if="scope.row.status === '通过'">通过</el-tag>
+            <el-tag type="danger" v-if="scope.row.status === '拒绝'">拒绝</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="180" fixed="right">
+          <template v-slot="scope">
+            <el-button size="mini" type="warning" plain @click="handleAudit(scope.row)">审核</el-button>
+            <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" style="margin-top: 5px" plain @click="del(scope.row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
+        <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="pageNum"
+            :page-sizes="[5, 10, 20]"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="total">
+        </el-pagination>
+      </div>
+    </div>
+
+    <el-dialog title="审核" :visible.sync="AuditVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
+        <el-form-item label="审核状态" prop="status">
+          <el-select style="width: 100%" v-model="form.status">
+            <el-option v-for="item in ['待审核', '通过', '拒绝']" :key="item" :value="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="AuditVisible = false">取 消</el-button>
+        <el-button type="primary" @click="save">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="商家" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+      <div style="height: 400px; overflow: auto">
+        <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
+          <el-form-item style="text-align: center">
+            <el-upload
+                class="avatar-uploader"
+                :action="$baseUrl + '/files/upload'"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+            >
+              <img v-if="form.avatar" :src="form.avatar" class="avatar" />
+            </el-upload>
+            <div>商家Logo</div>
+          </el-form-item>
+          <el-form-item label="商家名称" prop="name">
+            <el-input v-model="form.name" placeholder="商家名称"></el-input>
+          </el-form-item>
+          <el-form-item label="账号" prop="username">
+            <el-input v-model="form.username" placeholder="账号"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="form.password" placeholder="密码" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="电话" prop="phone">
+            <el-input v-model="form.phone" placeholder="电话"></el-input>
+          </el-form-item>
+          <el-form-item label="简介" prop="info">
+            <el-input v-model="form.info" placeholder="简介"></el-input>
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-input v-model="form.address" placeholder="地址"></el-input>
+          </el-form-item>
+
+          <el-form-item label="营业时间">
+            <el-row>
+              <el-col :span="11">
+                <el-form-item  style="width: 100%">
+                  <el-time-select
+                      style="width: auto"
+                      v-model="form.startTime"
+                      :picker-options="{start: '06:00',step: '00:30',end: '24:00'}"
+                      placeholder="开始时间">
+                  </el-time-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2"><div>&ensp;至</div></el-col>
+              <el-col :span="11">
+                <el-form-item style="width: 100%">
+                  <el-time-select
+                      style="width: auto"
+                      v-model="form.endTime"
+                      :picker-options="{start: '08:30',step: '00:15',end: '24:00'}"
+                      placeholder="结束时间">
+                  </el-time-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item label="类型" prop="type">
+            <el-select style="width: 100%" v-model="form.type">
+              <el-option v-for="item in ['奶茶饮品', '快餐简食', '炸鸡汉堡', '特色美食']" :key="item" :value="item" :label="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="营业执照">
+            <el-upload
+                :action="$baseUrl + '/files/upload'"
+                :show-file-list="false"
+                :on-success="handleLicenseSuccess"
+            >
+              <img style="object-fit: cover" v-if="form.license" :src="form.license" class="license"/>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="fromVisible = false">取 消</el-button>
+        <el-button type="primary" @click="save">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="商家" :visible.sync="EditVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+      <div style="height: 400px; overflow: auto">
+        <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
+          <el-form-item label="商家名称" prop="name">
+            <el-input v-model="form.name" placeholder="商家名称"></el-input>
+          </el-form-item>
+          <el-form-item label="账号" prop="username">
+            <el-input v-model="form.username" placeholder="账号"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="form.password" placeholder="密码" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="电话" prop="phone">
+            <el-input v-model="form.phone" placeholder="电话"></el-input>
+          </el-form-item>
+          <el-form-item label="简介" prop="info">
+            <el-input v-model="form.info" placeholder="简介"></el-input>
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-input v-model="form.address" placeholder="地址"></el-input>
+          </el-form-item>
+
+          <el-form-item label="营业时间">
+            <el-row>
+              <el-col :span="11">
+                <el-form-item  style="width: 100%">
+                  <el-time-select
+                      style="width: auto"
+                      v-model="form.startTime"
+                      :picker-options="{start: '06:00',step: '00:30',end: '24:00'}"
+                      placeholder="开始时间">
+                  </el-time-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2"><div>&ensp;至</div></el-col>
+              <el-col :span="11">
+                <el-form-item style="width: 100%">
+                  <el-time-select
+                      style="width: auto"
+                      v-model="form.endTime"
+                      :picker-options="{start: '08:30',step: '00:15',end: '24:00'}"
+                      placeholder="结束时间">
+                  </el-time-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item label="类型" prop="type">
+            <el-select style="width: 100%" v-model="form.type">
+              <el-option v-for="item in ['奶茶饮品', '快餐简食', '炸鸡汉堡', '特色美食']" :key="item" :value="item" :label="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商家Logo">
+            <el-upload
+                :action="$baseUrl + '/files/upload'"
+                :headers="{ token: user.token }"
+                list-type="picture"
+                :on-success="handleAvatarSuccess"
+            >
+              <el-button type="primary">上传商家Logo</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="营业执照">
+            <el-upload
+                :action="$baseUrl + '/files/upload'"
+                :headers="{ token: user.token }"
+                :file-list="form.license? [form.license] : []"
+                list-type="picture"
+                :on-success="handleLicenseSuccess"
+            >
+              <el-button type="primary">上传营业执照</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="EditVisible = false">取 消</el-button>
+        <el-button type="primary" @click="save">确 定</el-button>
+      </div>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Business",
+  data() {
+    return {
+      tableData: [],  // 所有的数据
+      pageNum: 1,   // 当前的页码
+      pageSize: 10,  // 每页显示的个数
+      total: 0,
+      username: null,
+      name: null,
+      fromVisible: false,
+      EditVisible:false,
+      AuditVisible: false,
+      form: {},
+      user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
+      rules: {
+        username: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+        ],
+        name: [
+          {required: true, message: '请输入商户名称', trigger: 'blur'},
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+        ],
+        type: [
+          {required: true, message: '请选择商家类型', trigger: 'blur'},
+        ]
+      },
+      ids: []
+    }
+  },
+  created() {
+    this.load(1)
+  },
+  methods: {
+    handleAdd() {   // 新增数据
+      this.form = {}  // 新增数据的时候清空数据
+      this.EditVisible = true// 打开弹窗
+    },
+    handleEdit(row) {   // 编辑数据
+      this.form = JSON.parse(JSON.stringify(row))//给form对象赋值（要深拷贝数据）
+      console.log(this.form)
+      this.fromVisible = true   // 打开弹窗
+    },
+    handleAudit(row) {   // 审核数据
+      this.form = JSON.parse(JSON.stringify(row))
+      this.AuditVisible = true   // 打开弹窗
+    },
+    save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
+      this.$refs.formRef.validate((valid) => {
+        if (valid) {
+          this.$request({
+            url: this.form.id ? '/business/update' : '/business/add',
+            method: this.form.id ? 'PUT' : 'POST',
+            data: this.form
+          }).then(res => {
+            if (res.code === '200') {  // 表示成功保存
+              this.$message.success('保存成功')
+              this.load(1)
+              if (this.fromVisible = true){
+                this.fromVisible = false
+              }
+              if (this.AuditVisible = true){
+                this.AuditVisible = false
+              }
+              if (this.EditVisible = true){
+                this.EditVisible = false
+              }
+            } else {
+              this.$message.error(res.msg)  // 弹出错误的信息
+            }
+          })
+        }
+      })
+    },
+    del(id) {   // 单个删除
+      this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
+        this.$request.delete('/business/delete/' + id).then(res => {
+          if (res.code === '200') {   // 表示操作成功
+            this.$message.success('操作成功')
+            this.load(1)
+          } else {
+            this.$message.error(res.msg)  // 弹出错误的信息
+          }
+        })
+      }).catch(() => {
+      })
+    },
+    handleSelectionChange(rows) {   // 当前选中的所有的行数据
+      this.ids = rows.map(v => v.id)
+    },
+    delBatch() {   // 批量删除
+      if (!this.ids.length) {
+        this.$message.warning('请选择数据')
+        return
+      }
+      this.$confirm('您确定批量删除这些数据吗？', '确认删除', {type: "warning"}).then(response => {
+        this.$request.delete('/business/delete/batch', {data: this.ids}).then(res => {
+          if (res.code === '200') {   // 表示操作成功
+            this.$message.success('操作成功')
+            this.load(1)
+          } else {
+            this.$message.error(res.msg)  // 弹出错误的信息
+          }
+        })
+      }).catch(() => {
+      })
+    },
+    load(pageNum) {  // 分页查询
+      if (pageNum) this.pageNum = pageNum
+      this.$request.get('/business/selectPage', {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          username: this.username,
+          name: this.name,
+        }
+      }).then(res => {
+        this.tableData = res.data?.list
+        this.total = res.data?.total
+      })
+    },
+    reset() {
+      this.username = null
+      this.name = null
+      this.load(1)
+    },
+    handleCurrentChange(pageNum) {
+      this.load(pageNum)
+    },
+    handleAvatarSuccess(response, file, fileList) {
+      // 把头像属性换成上传的图片的链接
+      this.form.avatar = response.data
+    },
+    handleLicenseSuccess(response, file, fileList) {
+      this.form.license = response.data
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+/deep/.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+/deep/.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  display: block;
+  border-radius: 50%;
+}
+.license {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

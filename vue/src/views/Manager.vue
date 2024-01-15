@@ -40,23 +40,28 @@
           </el-menu-item>
           <el-submenu index="info">
             <template slot="title">
-              <i class="el-icon-menu"></i><span>信息管理</span>
+              <i class="el-icon-s-order"></i><span>信息管理</span>
             </template>
             <el-menu-item index="/notice" v-if="user.role === 'ADMIN'">公告信息</el-menu-item>
 
             <el-menu-item index="/banner" v-if="user.role === 'ADMIN'">广告信息</el-menu-item>
             <el-menu-item index="/category">菜品分类信息</el-menu-item>
             <el-menu-item index="/goods">菜品信息</el-menu-item>
+            <el-menu-item index="/orders">订单信息</el-menu-item>
+            <el-menu-item index="/comment">评论信息</el-menu-item>
           </el-submenu>
 
           <el-submenu index="user" v-if="user.role === 'ADMIN'">
             <template slot="title">
-              <i class="el-icon-menu"></i><span>用户管理</span>
+              <i class="el-icon-user-solid"></i><span>用户管理</span>
             </template>
             <el-menu-item index="/admin">管理员信息 </el-menu-item>
             <el-menu-item index="/business">商家信息</el-menu-item>
             <el-menu-item index="/user">用户信息</el-menu-item>
           </el-submenu>
+          <el-menu-item index="/chart">
+            <i class="el-icon-s-help"></i><span>数据统计</span>
+          </el-menu-item>
         </el-menu>
       </div>
 

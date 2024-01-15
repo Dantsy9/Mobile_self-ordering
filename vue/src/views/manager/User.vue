@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <el-dialog title="商家" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+    <el-dialog title="用户" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
       <div style="height: 400px; overflow: auto">
         <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
           <el-form-item label="头像">

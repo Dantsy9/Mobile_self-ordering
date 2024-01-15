@@ -48,7 +48,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.example.entity.Admin">
+    <update id="updateById" parameterType="com.example.entity.Banner">
         update banner
         <set>
             <if test="img != null">

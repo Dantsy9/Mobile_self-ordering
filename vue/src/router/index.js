@@ -28,6 +28,9 @@ const routes = [
       { path: 'category', name: 'Category', meta: { name: '菜品分类信息' }, component: () => import('../views/manager/Category') },
       { path: 'goods', name: 'Goods', meta: { name: '菜品信息' }, component: () => import('../views/manager/Goods') },
       { path: 'banner', name: 'Banner', meta: { name: '广告信息' }, component: () => import('../views/manager/Banner') },
+      { path: 'orders', name: 'Orders', meta: { name: '订单信息' }, component: () => import('../views/manager/Orders') },
+      { path: 'comment', name: 'Comment', meta: { name: '评论信息' }, component: () => import('../views/manager/Comment') },
+      { path: 'chart', name: 'Chart', meta: { name: '数据统计' }, component: () => import('../views/manager/Chart') },
     ]
   },
   {

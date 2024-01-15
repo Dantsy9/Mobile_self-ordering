@@ -55,7 +55,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.example.entity.Admin">
+    <update id="updateById" parameterType="com.example.entity.User">
         update user
         <set>
             <if test="username != null">

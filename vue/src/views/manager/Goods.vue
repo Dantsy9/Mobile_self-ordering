@@ -62,54 +62,56 @@
 
 
     <el-dialog title="商品" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
-      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input v-model="form.price" placeholder="价格"></el-input>
-        </el-form-item>
-        <el-form-item label="折扣" prop="discount">
-          <el-input v-model="form.discount" placeholder="折扣: 1表示不打折，折扣可以设置小数"></el-input>
-        </el-form-item>
-        <el-form-item label="图片" prop="img">
-          <el-upload
-              :action="$baseUrl + '/files/upload'"
-              :headers="{ token: user.token }"
-              :on-success="handleFileSuccess"
-          >
-            <el-button type="primary">上传</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="描述" prop="descr">
-          <el-input v-model="form.descr" placeholder="描述"></el-input>
-        </el-form-item>
-        <el-form-item label="原材料" prop="origin">
-          <el-input v-model="form.origin" placeholder="原材料"></el-input>
-        </el-form-item>
-        <el-form-item label="口味" prop="taste">
-          <el-input v-model="form.taste" placeholder="口味"></el-input>
-        </el-form-item>
-        <el-form-item label="规格" prop="specs">
-          <el-input v-model="form.specs" placeholder="规格"></el-input>
-        </el-form-item>
-        <el-form-item label="上架日期" prop="date">
-          <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd"
-                          v-model="form.date" style="width: 100%"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="上架状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio label="上架"></el-radio>
-            <el-radio label="下架"></el-radio>
-          </el-radio-group>
-        </el-form-item>
+      <div style="height: 400px; overflow: auto">
+        <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="form.name" placeholder="名称"></el-input>
+          </el-form-item>
+          <el-form-item label="价格" prop="price">
+            <el-input v-model="form.price" placeholder="价格"></el-input>
+          </el-form-item>
+          <el-form-item label="折扣" prop="discount">
+            <el-input v-model="form.discount" placeholder="折扣: 1表示不打折，折扣可以设置小数"></el-input>
+          </el-form-item>
+          <el-form-item label="图片" prop="img">
+            <el-upload
+                :action="$baseUrl + '/files/upload'"
+                :headers="{ token: user.token }"
+                :on-success="handleFileSuccess"
+            >
+              <el-button type="primary">上传</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="描述" prop="descr">
+            <el-input v-model="form.descr" placeholder="描述"></el-input>
+          </el-form-item>
+          <el-form-item label="原材料" prop="origin">
+            <el-input v-model="form.origin" placeholder="原材料"></el-input>
+          </el-form-item>
+          <el-form-item label="口味" prop="taste">
+            <el-input v-model="form.taste" placeholder="口味"></el-input>
+          </el-form-item>
+          <el-form-item label="规格" prop="specs">
+            <el-input v-model="form.specs" placeholder="规格"></el-input>
+          </el-form-item>
+          <el-form-item label="上架日期" prop="date">
+            <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                            v-model="form.date" style="width: 100%"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="上架状态" prop="status">
+            <el-radio-group v-model="form.status">
+              <el-radio label="上架"></el-radio>
+              <el-radio label="下架"></el-radio>
+            </el-radio-group>
+          </el-form-item>
 
-        <el-form-item label="分类" prop="categoryId">
-          <el-select style="width: 100%" v-model="form.categoryId">
-            <el-option v-for="item in categoryList" :key="item.id" :value="item.id" :label="item.name"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+          <el-form-item label="分类" prop="categoryId">
+            <el-select style="width: 100%" v-model="form.categoryId">
+              <el-option v-for="item in categoryList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="fromVisible = false">取 消</el-button>

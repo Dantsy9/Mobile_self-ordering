@@ -35,7 +35,7 @@ export default {
 
   data() {
     return {
-      form: { role: '' },
+      form: { role: 'ADMIN' },
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'blur' },

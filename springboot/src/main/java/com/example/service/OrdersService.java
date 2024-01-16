@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.example.common.Result;
 import com.example.common.enums.RoleEnum;
 import com.example.dto.CountByDayResponseDto;
@@ -140,6 +141,25 @@ public class OrdersService {
 
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        List<String> dateList = new ArrayList<>();
+
+        //如果不存在记录
+        if (CollectionUtils.isEmpty(vos)) {
+            //遍历给定的日期期间的每一天,如果日期间存在间隔就补全
+            for (int i = 0; !Duration.between(startOfDay.plusDays(i), endOfDay).isNegative(); i++) {
+                //添加日期
+                dateList.add(startOfDay.plusDays(i).format(formatter2));
+            }
+            List<CountByDayResponseDto> result = new ArrayList<>();
+            dateList.forEach(s -> {
+                CountByDayResponseDto dto = new CountByDayResponseDto();
+                dto.setDayTime(s);
+                dto.setActual(0L);
+                result.add(dto);
+            });
+            return Result.success(result);
+        }
+
         //遍历vos列表，吧"yyyy-MM-dd HH:mm:ss"格式的时间改成"yyyy-MM-dd"
         vos.forEach(vo -> {
             LocalDateTime dateTime = LocalDateTime.parse(vo.getDayTime(), formatter);
@@ -147,7 +167,6 @@ public class OrdersService {
         });
 
         //进行日期的补全
-        List<String> dateList = new ArrayList<>();
         //遍历给定的日期期间的每一天,如果日期间存在间隔就补全
         for (int i = 0; !Duration.between(startOfDay.plusDays(i), endOfDay).isNegative(); i++) {
             //添加日期

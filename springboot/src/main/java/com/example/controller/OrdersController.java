@@ -6,6 +6,7 @@ import com.example.common.Result;
 import com.example.entity.Orders;
 import com.example.service.OrdersService;
 import com.github.pagehelper.PageInfo;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -91,19 +92,25 @@ public class OrdersController {
     @GetMapping("/chart")
     //折线图
     public Result charts(Orders orderDate) {
-        orderDate.setStatus("已完成");
-        List<Orders> list = ordersService.selectAll(orderDate);
-        Set<String> dates = list.stream().map(Orders:: interceptPayTime).collect(Collectors.toSet());
-        List<String> dateList = CollUtil.newArrayList(dates);
-        dateList.sort(Comparator.naturalOrder());
-        List<Dict> lineList = new ArrayList<>();
-        for (String date : dateList) {
-            BigDecimal sum = list.stream().filter(orders ->  orders.interceptPayTime().equals(date)).map(Orders::getActual).
-                    reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-            Dict dict = Dict.create();
-            Dict line = dict.set("date", date).set("value", sum);
-            lineList.add(line);
-        }
-        return Result.success(lineList);
+//        orderDate.setStatus("已完成");
+//        List<Orders> list = ordersService.selectAll(orderDate);
+//        Set<String> dates = list.stream().map(Orders:: interceptPayTime).collect(Collectors.toSet());
+//        List<String> dateList = CollUtil.newArrayList(dates);
+//        dateList.sort(Comparator.naturalOrder());
+//        List<Dict> lineList = new ArrayList<>();
+//        for (String date : dateList) {
+//            BigDecimal sum = list.stream().filter(orders ->  orders.interceptPayTime().equals(date)).map(Orders::getActual).
+//                    reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+//            Dict dict = Dict.create();
+//            Dict line = dict.set("date", date).set("value", sum);
+//            lineList.add(line);
+//        }
+//        return Result.success(lineList);
+         return Result.success();
+    }
+
+    @PostMapping("/countByDay")
+    public Result countByDay(Long businessId) {
+        return Result.success(ordersService.countByDay(businessId));
     }
 }

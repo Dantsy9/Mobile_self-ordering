@@ -148,7 +148,7 @@ public class OrdersService {
             //遍历给定的日期期间的每一天,如果日期间存在间隔就补全
             for (int i = 0; !Duration.between(startOfDay.plusDays(i), endOfDay).isNegative(); i++) {
                 //添加日期
-                dateList.add(startOfDay.plusDays(i).format(formatter2));
+                dateList.add(startOfDay.plusDays(i).format(formatter));
             }
             List<CountByDayResponseDto> result = new ArrayList<>();
             dateList.forEach(s -> {

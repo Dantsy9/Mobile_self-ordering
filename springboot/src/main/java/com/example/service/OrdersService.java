@@ -13,7 +13,6 @@ import com.example.utils.TokenUtils;
 import com.example.vo.CountByDayResponseVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.xerces.internal.impl.xs.util.XInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrdersService {
@@ -114,7 +112,7 @@ public class OrdersService {
         // 获取当前日期
         LocalDate currentDate = LocalDate.now();
         // 将时间部分设置为"23:59:59"
-        LocalDateTime endOfDay = currentDate.atTime(LocalTime.MIN);
+        LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
         // 格式化日期时间
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String todayTime = endOfDay.format(formatter);
@@ -137,7 +135,7 @@ public class OrdersService {
         //分组语句
         wrapper.groupBy("pay_time");
         //ordersRepository中的方法
-        List<CountByDayResponseVo> vos = ordersRepository.countByDay(wrapper);
+        List<CountByDayResponseVo> vos = ordersMapper.countByDay(wrapper);
 
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -154,7 +152,7 @@ public class OrdersService {
             dateList.forEach(s -> {
                 CountByDayResponseDto dto = new CountByDayResponseDto();
                 dto.setDayTime(s);
-                dto.setActual(0L);
+                dto.setActual((double) 0);
                 result.add(dto);
             });
             return Result.success(result);
@@ -175,14 +173,15 @@ public class OrdersService {
 
         //整理结果
         List<CountByDayResponseDto> result = new ArrayList<>();
-        for (int j = 0; j < dateList.size(); j++) {
+        for (String s : dateList) {
             CountByDayResponseDto resDto = new CountByDayResponseDto();
-            resDto.setDayTime(dateList.get(j));
-            if (vos.get(j).getDayTime().equals(dateList.get(j))) {
-                resDto.setActual(vos.get(j).getActual());
-            } else {
-                resDto.setActual(0L);
-            }
+            resDto.setDayTime(s);
+            resDto.setActual((double) 0);
+            vos.forEach(vo -> {
+                if (vo.getDayTime().equals(s)) {
+                    resDto.setActual(vo.getActual());
+                }
+            });
             result.add(resDto);
         }
 

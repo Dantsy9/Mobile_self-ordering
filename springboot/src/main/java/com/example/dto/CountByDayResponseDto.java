@@ -2,7 +2,6 @@ package com.example.dto;
 
 import lombok.Data;
 
-import java.util.Date;
 
 /**
  * @author V
@@ -18,5 +17,5 @@ public class CountByDayResponseDto {
      /**
      * 金额
      */
-     private Long actual;
+     private Double actual;
 }

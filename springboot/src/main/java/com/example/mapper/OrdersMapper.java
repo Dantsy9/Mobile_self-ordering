@@ -39,7 +39,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      */
     List<Orders> selectAll(Orders orders);
 
-    @Select("select count(actual) ,pay_time as dayTime" +
+    @Select("select sum(actual) as actual ,pay_time as dayTime" +
             " from orders" +
             " ${ew.customSqlSegment}")
     List<CountByDayResponseVo> countByDay(@Param(Constants.WRAPPER)QueryWrapper wrapper);

@@ -8,7 +8,6 @@ import com.example.dto.CountByDayResponseDto;
 import com.example.entity.Account;
 import com.example.entity.Orders;
 import com.example.mapper.OrdersMapper;
-import com.example.mapper.repository.OrdersRepository;
 import com.example.utils.TokenUtils;
 import com.example.vo.CountByDayResponseVo;
 import com.github.pagehelper.PageHelper;
@@ -34,9 +33,6 @@ public class OrdersService {
 
     @Resource
     private OrdersMapper ordersMapper;
-
-    @Resource
-    private OrdersRepository ordersRepository;
 
     /**
      * 新增
@@ -177,12 +173,12 @@ public class OrdersService {
             CountByDayResponseDto resDto = new CountByDayResponseDto();
             resDto.setDayTime(s);
             resDto.setActual((double) 0);
-            vos.forEach(vo -> {
+            for (CountByDayResponseVo vo : vos ) {
                 if (vo.getDayTime().equals(s)) {
                     resDto.setActual(vo.getActual());
+                    break;
                 }
-            });
-            result.add(resDto);
+            }
         }
 
         return Result.success(result);

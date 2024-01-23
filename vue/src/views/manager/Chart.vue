@@ -32,7 +32,7 @@ import * as echarts from 'echarts';
 
 const option = {
   title: {
-    text: '销售趋势图',
+    text: '销售金额统计图',
     left: 'center'
   },
   legend: {
@@ -60,7 +60,7 @@ const option = {
 
 const option1 = {
   title: {
-    text: '柱状图',
+    text: '菜品销量统计图',
     left: 'center'
   },
   legend: {
@@ -71,14 +71,14 @@ const option1 = {
   },
   xAxis: {
     type: 'category',
-    data: ['水果', '零食', '饮料', '主食', '小食', '生活用品', '蔬菜']
+    data: []
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      name: '金额',
+      name: '销量',
       data: [],
       type: 'bar',
       smooth: true
@@ -88,7 +88,7 @@ const option1 = {
 
 const option2 = {
   title: {
-    text: '订单销售统计',
+    text: '菜品销量占比',
     subtext: '比例图',
     left: 'center'
   },
@@ -104,13 +104,13 @@ const option2 = {
       name: 'Access From',
       type: 'pie',
       radius: '50%',
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ],
+      data: [],
+      label: {
+        show: true,
+        formatter(param) {
+          return param.name + '(' + param.percent + '%)'
+        }
+      },
       emphasis: {
         itemStyle: {
           shadowBlur: 10,
@@ -124,24 +124,36 @@ const option2 = {
 export default {
   name: "Chart",
   data() {
-    return {}
+    return {
+      businessId: JSON.parse(localStorage.getItem('xm-user') || '{}').id
+    }
   },
   mounted() {
-    var lineDom = document.getElementById('line');
-    var lineChart = echarts.init(lineDom);
+    let lineDom = document.getElementById('line');
+    let lineChart = echarts.init(lineDom);
 
-    var barDom = document.getElementById('bar');
-    var barChart = echarts.init(barDom);
+    let barDom = document.getElementById('bar');
+    let barChart = echarts.init(barDom);
     barChart.setOption(option1)
 
-    var pieDom = document.getElementById('pie');
-    var pieChart = echarts.init(pieDom);
+    let pieDom = document.getElementById('pie');
+    let pieChart = echarts.init(pieDom);
     pieChart.setOption(option2)
+    this.$request.post('orders/countByDay/' + this.businessId).then(res => {
 
-    this.$request.get('orders/chart').then(res => {
-      option.xAxis.data = res.data ?.map(v => v.date) || []
-      option.series[0].data = res.data ?.map(v => v.value) || []
+      // 折线图
+      option.xAxis.data = res.data.data ?.map(v => v.dayTime) || []
+      option.series[0].data = res.data.data ?.map(v => v.actual) || []
       lineChart.setOption(option)
+
+      // 柱状图
+      // option1.xAxis.data = res.data.bar ?.map(v => v.name) || []
+      // option1.series[0].data = res.data.bar ?.map(v => v.value) || []
+      // barChart.setOption(option1)
+
+      // 饼图
+      // option2.series[0].data = res.data?.bar || []
+      // pieChart.setOption(option2)
     })
   }
 }

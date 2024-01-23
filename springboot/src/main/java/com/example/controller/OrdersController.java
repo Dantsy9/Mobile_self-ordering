@@ -110,8 +110,8 @@ public class OrdersController {
          return Result.success();
     }
 
-    @PostMapping("/countByDay")
-    public Result countByDay(Long businessId) {
+    @PostMapping("/countByDay/{businessId}")
+    public Result countByDay(@PathVariable Long businessId) {
         return Result.success(ordersService.countByDay(businessId));
     }
 }

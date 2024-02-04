@@ -17,4 +17,3 @@ target
 model/.version_*
 model/.back_*
 .gitignore
-springboot/target/*

@@ -10,16 +10,19 @@
 
     <select id="selectAll" resultType="com.example.entity.Orders">
         select
-        orders.*, business.name as businessName, user.name as userName
+        orders.*, business.name as businessName, user.name as userName, comment.id as commentId
         from orders
         left join business
         on orders.business_id = business.id
         left join user
         on orders.user_id = user.id
+        left join comment
+        on orders.id = comment.order_id
         <where>
             <if test="orderNo != null">and orders.order_no like concat('%', #{orderNo}, '%')</if>
             <if test="businessId != null">and orders.business_id = #{businessId}</if>
             <if test="userId != null">and orders.user_id = #{userId}</if>
+            <if test="commentId != null">and orders.id = #{commentId}</if>
             <choose>
                 <when test="status == '全部'">
 

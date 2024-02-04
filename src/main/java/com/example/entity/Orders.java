@@ -39,6 +39,9 @@ public class Orders implements Serializable {
     /** 名称 */
     private String name;
 
+    /** 评论ID*/
+    private Integer commentId;
+
     public Integer getId() {
         return id;
     }
@@ -171,4 +174,11 @@ public class Orders implements Serializable {
         this.userName = userName;
     }
 
+    public Integer getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
+    }
 }

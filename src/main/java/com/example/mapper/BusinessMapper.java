@@ -3,7 +3,6 @@ package com.example.mapper;
 import com.example.entity.Account;
 import com.example.entity.Admin;
 import com.example.entity.Business;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
 /**
  * 商家相关的数据访问接口
  */
-@Mapper
 public interface BusinessMapper {
 
     List<Business> selectAll(Business business);

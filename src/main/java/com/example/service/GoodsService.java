@@ -1,13 +1,10 @@
 package com.example.service;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
-import com.example.entity.Business;
 import com.example.entity.Category;
 import com.example.entity.Goods;
-import com.example.exception.CustomException;
 import com.example.mapper.GoodsMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
@@ -15,6 +12,8 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -52,7 +51,6 @@ public class GoodsService {
      */
     public void deleteById(Integer id) {
         businessService.checkBusinessAuth();
-
         goodsMapper.deleteById(id);
     }
 
@@ -85,7 +83,21 @@ public class GoodsService {
      * 根据ID查询
      */
     public Goods selectById(Integer id) {
-        return goodsMapper.selectById(id);
+        Goods goods = goodsMapper.selectById(id);
+        wrapGoods(goods);
+        return goods;
+    }
+
+    /**
+     * 设置商品折后信息
+     */
+    private Goods wrapGoods(Goods goods) {
+        if (goods == null) {
+            return null;
+        }
+        BigDecimal actualPrice = goods.getPrice().multiply(BigDecimal.valueOf(goods.getDiscount())).setScale(2, RoundingMode.UP);
+        goods.setActualPrice(actualPrice);
+        return goods;
     }
 
     /**
@@ -97,7 +109,11 @@ public class GoodsService {
         if (RoleEnum.BUSINESS.name().equals(role)){//若为商家，只可查询自己的信息
             goods.setBusinessId(currentUser.getId());//设置自己的id作为查询条件
         }
-        return goodsMapper.selectAll(goods);
+        List<Goods> goodsList = goodsMapper.selectAll(goods);
+        for (Goods g : goodsList){
+            wrapGoods(g);
+        }
+        return goodsList;
     }
 
     /**
@@ -111,6 +127,9 @@ public class GoodsService {
         }
         PageHelper.startPage(pageNum, pageSize);
         List<Goods> list = goodsMapper.selectAll(goods);
+        for (Goods g : list) {
+            wrapGoods(g);
+        }
         return PageInfo.of(list);
     }
 

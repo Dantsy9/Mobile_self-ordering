@@ -1,13 +1,17 @@
 package com.example.service;
 
+import cn.hutool.core.date.DateUtil;
+import com.example.common.enums.OrderStatusEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
 import com.example.entity.Comment;
+import com.example.entity.Orders;
 import com.example.mapper.CommentMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,10 +25,24 @@ public class CommentService {
     @Resource
     private CommentMapper commentMapper;
 
+    @Resource
+    private OrdersService ordersService;
+
     /**
      * 新增
      */
+    @Transactional
     public void add(Comment comment) {
+        comment.setTime(DateUtil.now());
+        Orders orders =  ordersService.selectById(comment.getOrderId());
+        if (orders != null ){
+            comment.setBusinessId(orders.getBusinessId());
+//            更新订单状态
+//            orders.setStatus(OrderStatusEnum.FINISH.getValue());
+            ordersService.updateById(orders);
+        }
+        Account account = TokenUtils.getCurrentUser();
+        comment.setUserId(account.getId());
         commentMapper.insert(comment);
     }
 

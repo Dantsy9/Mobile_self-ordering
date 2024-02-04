@@ -1,14 +1,12 @@
 package com.example.mapper;
 
 import com.example.entity.Comment;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
  * 操作comment相关数据接口
  */
-@Mapper
 public interface CommentMapper {
 
     /**

@@ -18,6 +18,8 @@ public class Account {
     /** 头像 */
     private String avatar;
 
+    private String phone;
+
     private String token;
 
     public Integer getId() {
@@ -82,5 +84,13 @@ public class Account {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

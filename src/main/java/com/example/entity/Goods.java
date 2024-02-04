@@ -12,16 +12,14 @@ public class Goods {
     private String name;
     /** 价格 */
     private BigDecimal price;
+    /** 折后价格*/
+    private BigDecimal actualPrice;
     /** 图片 */
     private String img;
     /** 描述 */
     private String descr;
-    /** 原材料 */
-    private String origin;
     /** 口味 */
     private String taste;
-    /** 规格 */
-    private String specs;
     /** 上架日期 */
     private String date;
     /** 上架状态 */
@@ -75,28 +73,12 @@ public class Goods {
         this.descr = descr;
     }
 
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
     public String getTaste() {
         return taste;
     }
 
     public void setTaste(String taste) {
         this.taste = taste;
-    }
-
-    public String getSpecs() {
-        return specs;
-    }
-
-    public void setSpecs(String specs) {
-        this.specs = specs;
     }
 
     public String getDate() {
@@ -153,5 +135,13 @@ public class Goods {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public BigDecimal getActualPrice() {
+        return actualPrice;
+    }
+
+    public void setActualPrice(BigDecimal actualPrice) {
+        this.actualPrice = actualPrice;
     }
 }

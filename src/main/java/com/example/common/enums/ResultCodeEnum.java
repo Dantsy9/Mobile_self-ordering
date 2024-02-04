@@ -15,6 +15,8 @@ public enum ResultCodeEnum {
     USER_NOT_EXIST_ERROR("5004", "用户不存在"),
     PARAM_PASSWORD_ERROR("5005", "原密码输入错误"),
     NO_AUTH("5006", "无权限,请联系管理员"),
+    NO_LOGIN("5007","请登录"),
+    NO_GOODS("5008","请添加商品至购物车"),
     ;
 
     public String code;

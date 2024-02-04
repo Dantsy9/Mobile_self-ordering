@@ -27,41 +27,6 @@ public class AdminService {
     private AdminMapper adminMapper;
 
     /**
-     * 新增
-     */
-    public void add(Admin admin) {
-        Admin dbAdmin = adminMapper.selectByUsername(admin.getUsername());
-        if (ObjectUtil.isNotNull(dbAdmin)) {
-            throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
-        }
-        //若未填写密码，则给一个默认密码“123456”
-        if (ObjectUtil.isEmpty(admin.getPassword())) {
-            admin.setPassword(Constants.USER_DEFAULT_PASSWORD);
-        }
-        if (ObjectUtil.isEmpty(admin.getName())) {
-            admin.setName(admin.getUsername());
-        }
-        admin.setRole(RoleEnum.ADMIN.name());
-        adminMapper.insert(admin);
-    }
-
-    /**
-     * 删除
-     */
-    public void deleteById(Integer id) {
-        adminMapper.deleteById(id);
-    }
-
-    /**
-     * 批量删除
-     */
-    public void deleteBatch(List<Integer> ids) {
-        for (Integer id : ids) {
-            adminMapper.deleteById(id);
-        }
-    }
-
-    /**
      * 修改
      */
     public void updateById(Admin admin) {
@@ -73,22 +38,6 @@ public class AdminService {
      */
     public Admin selectById(Integer id) {
         return adminMapper.selectById(id);
-    }
-
-    /**
-     * 查询所有
-     */
-    public List<Admin> selectAll(Admin admin) {
-        return adminMapper.selectAll(admin);
-    }
-
-    /**
-     * 分页查询
-     */
-    public PageInfo<Admin> selectPage(Admin admin, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Admin> list = adminMapper.selectAll(admin);
-        return PageInfo.of(list);
     }
 
     /**
@@ -107,15 +56,6 @@ public class AdminService {
         String token = TokenUtils.createToken(tokenData, dbAdmin.getPassword());
         dbAdmin.setToken(token);
         return dbAdmin;
-    }
-
-    /**
-     * 注册
-     */
-    public void register(Account account) {
-        Admin admin = new Admin();
-        BeanUtils.copyProperties(account, admin);
-        add(admin);
     }
 
     /**

@@ -10,6 +10,8 @@ public class Banner implements Serializable {
 
     /** ID */
     private Integer id;
+    /** 标题*/
+    private String title;
     /** 图片 */
     private String img;
     /** 商家ID */
@@ -23,6 +25,14 @@ public class Banner implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getImg() {

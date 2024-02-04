@@ -1,14 +1,11 @@
 package com.example.mapper;
 
 import com.example.entity.Banner;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
 
 /**
  * 操作banner相关数据接口
  */
-@Mapper
 public interface BannerMapper {
 
     /**

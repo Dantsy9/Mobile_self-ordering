@@ -1,14 +1,11 @@
 package com.example.mapper;
 
 import com.example.entity.Goods;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
 
 /**
  * 操作goods相关数据接口
  */
-@Mapper
 public interface GoodsMapper {
 
     /**

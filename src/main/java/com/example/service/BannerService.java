@@ -1,7 +1,11 @@
 package com.example.service;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.example.entity.Account;
 import com.example.entity.Banner;
+import com.example.entity.Category;
 import com.example.mapper.BannerMapper;
+import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import javax.annotation.Resource;
@@ -21,6 +25,8 @@ public class BannerService {
      * 新增
      */
     public void add(Banner banner) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        banner.setBusinessId(currentUser.getId());
         bannerMapper.insert(banner);
     }
 

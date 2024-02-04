@@ -73,4 +73,10 @@ public class OrdersItemService {
         return PageInfo.of(list);
     }
 
+    /**
+     * 根据OrderId删除订单详情信息
+     */
+    public void deleteByOrderId(Integer orderId) {
+        ordersItemMapper.deleteByOrderId(orderId);
+    }
 }

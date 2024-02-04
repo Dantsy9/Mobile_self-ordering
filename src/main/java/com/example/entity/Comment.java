@@ -31,6 +31,7 @@ public class Comment implements Serializable {
 
     private String time;
 
+    private String userAvatar;
 
     public Integer getId() {
         return id;
@@ -118,5 +119,13 @@ public class Comment implements Serializable {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 }

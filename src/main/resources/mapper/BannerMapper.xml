@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.BannerMapper">
 
     <sql id="Base_Column_List">
-        id,img,business_id
+        id,title,img,business_id
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Banner">
@@ -16,6 +16,7 @@
         on banner.business_id = business.id
         <where>
             <if test="id != null"> and banner.id = #{id}</if>
+            <if test="title != null"> and banner.title = #{title}</if>
             <if test="img != null"> and banner.img like concat('%', #{img}, '%')</if>
             <if test="businessId != null"> and banner.business_id = #{businessId}</if>
             <if test="businessName != null"> and business.name like concat('%', #{businessName}, '%')</if>
@@ -38,11 +39,13 @@
         insert into banner
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
             <if test="img != null">img,</if>
             <if test="businessId != null">business_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
             <if test="img != null">#{img},</if>
             <if test="businessId != null">#{businessId},</if>
         </trim>
@@ -53,6 +56,8 @@
         <set>
             <if test="img != null">
                 img = #{img},
+            </if><if test="title != null">
+            title = #{title},
             </if>
             <if test="businessId != null">
                 business_id = #{businessId},

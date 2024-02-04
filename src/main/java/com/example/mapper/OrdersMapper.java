@@ -1,18 +1,10 @@
 package com.example.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.example.entity.Orders;
-import com.example.vo.CountByDayResponseVo;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-@Mapper
-public interface OrdersMapper extends BaseMapper<Orders> {
+public interface OrdersMapper {
 
     /**
      * 新增
@@ -38,10 +30,5 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * 查询所有
      */
     List<Orders> selectAll(Orders orders);
-
-    @Select("select sum(actual) as actual ,pay_time as dayTime" +
-            " from orders" +
-            " ${ew.customSqlSegment}")
-    List<CountByDayResponseVo> countByDay(@Param(Constants.WRAPPER)QueryWrapper wrapper);
 
 }

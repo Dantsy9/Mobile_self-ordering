@@ -20,7 +20,7 @@ public class OrdersItem implements Serializable {
     /** 商品价格 */
     private BigDecimal price;
     /** 购买数量 */
-    private Integer num;
+    private BigDecimal num;
 
     public Integer getId() {
         return id;
@@ -62,11 +62,11 @@ public class OrdersItem implements Serializable {
         this.price = price;
     }
 
-    public Integer getNum() {
+    public BigDecimal getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(BigDecimal num) {
         this.num = num;
     }
 

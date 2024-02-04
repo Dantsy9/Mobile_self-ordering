@@ -1,22 +1,23 @@
 package com.example.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import com.example.common.Result;
 import com.example.entity.Orders;
+import com.example.entity.OrdersDTO;
+import com.example.entity.OrdersItem;
+import com.example.service.OrdersItemService;
 import com.example.service.OrdersService;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -25,12 +26,24 @@ public class OrdersController {
     @Resource
     private OrdersService ordersService;
 
+    @Resource
+    private OrdersItemService ordersItemService;
+
     /**
      * 新增
      */
     @PostMapping("/add")
     public Result add(@RequestBody Orders orders) {
         ordersService.add(orders);
+        return Result.success();
+    }
+
+    /**
+     * 新增
+     */
+    @PostMapping("/addOrder")
+    public Result addOrder(@RequestBody OrdersDTO ordersDTO) {
+        ordersService.addOrder(ordersDTO);
         return Result.success();
     }
 
@@ -92,26 +105,37 @@ public class OrdersController {
 
     @GetMapping("/chart")
     //折线图
-    public Result charts(Orders orderDate) {
-//        orderDate.setStatus("已完成");
-//        List<Orders> list = ordersService.selectAll(orderDate);
-//        Set<String> dates = list.stream().map(Orders:: interceptPayTime).collect(Collectors.toSet());
-//        List<String> dateList = CollUtil.newArrayList(dates);
-//        dateList.sort(Comparator.naturalOrder());
-//        List<Dict> lineList = new ArrayList<>();
-//        for (String date : dateList) {
-//            BigDecimal sum = list.stream().filter(orders ->  orders.interceptPayTime().equals(date)).map(Orders::getActual).
-//                    reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-//            Dict dict = Dict.create();
-//            Dict line = dict.set("date", date).set("value", sum);
-//            lineList.add(line);
-//        }
-//        return Result.success(lineList);
-         return Result.success();
-    }
+    public Result charts(Orders orderDate, OrdersItem ordersItemDate) {
+        orderDate.setStatus("已完成");
+        List<Orders> list = ordersService.selectAll(orderDate);
+        Set<String> dates = list.stream().map(Orders:: interceptPayTime).collect(Collectors.toSet());
+        List<String> dateList = CollUtil.newArrayList(dates);
+        dateList.sort(Comparator.naturalOrder());
+        List<Dict> lineList = new ArrayList<>();
+        for (String date : dateList) {
+            BigDecimal sum = list.stream().filter(orders ->  orders.interceptPayTime().equals(date)).map(Orders::getActual).
+                    reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+            Dict dict = Dict.create();
+            Dict line = dict.set("date", date).set("value", sum);
+            lineList.add(line);
+        }
 
-    @GetMapping("/countByDay/{businessId}")
-    public Result countByDay(@PathVariable Long businessId) {
-        return Result.success(ordersService.countByDay(businessId));
+        //柱状图
+        List<OrdersItem> list1 = ordersItemService.selectAll(ordersItemDate);
+        Set<String> categories = list1.stream().map(OrdersItem:: getGoodsName).collect(Collectors.toSet());
+        List<Dict> barList = new ArrayList<>();
+        for (String cate : categories) {
+            BigDecimal sum = list1.stream().filter(ordersItem ->  ordersItem.getGoodsName().equals(cate)).map(OrdersItem::getNum).
+                    reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+            Dict dict = Dict.create();
+            Dict bar = dict.set("name", cate).set("value", sum);
+            barList.add(bar);
+        }
+
+        //饼图
+
+
+        Dict res = Dict.create().set("line", lineList).set("bar", barList);
+        return Result.success(res);
     }
 }

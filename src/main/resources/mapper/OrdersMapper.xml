@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.OrdersMapper">
 
     <sql id="Base_Column_List">
-        id,order_no,table_num,time,pay_time,status,business_id,phone,user_id,amount,discount,actual,comment,cover,name
+        id,order_no,table_num,pay_time,status,business_id,phone,user_id,amount,discount,actual,comment,cover,name
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Orders">
@@ -20,15 +20,36 @@
             <if test="orderNo != null">and orders.order_no like concat('%', #{orderNo}, '%')</if>
             <if test="businessId != null">and orders.business_id = #{businessId}</if>
             <if test="userId != null">and orders.user_id = #{userId}</if>
-            <if test="status != null">and orders.status = #{status}</if>
+            <choose>
+                <when test="status == '全部'">
+
+                </when>
+                <when test="status == '待出餐'">
+                    and orders.status = '待出餐'
+                </when>
+                <when test="status == '已完成'">
+                    and (orders.status = '待评价' or orders.status = '已完成')
+                </when>
+                <when test="status == '已退款'">
+                    and orders.status = '已退款'
+                </when>
+                <when test="status != null">
+                    and orders.status = #{ status }
+                </when>
+            </choose>
         </where>
         order by id desc
     </select>
 
     <select id="selectById" resultType="com.example.entity.Orders">
-        select
-            *
+        select orders.*,
+               business.name as businessName,
+               user.name     as userName
         from orders
+                 left join business
+                           on orders.business_id = business.id
+                 left join user
+                           on orders.user_id = user.id
         where orders.id = #{id}
     </select>
 
@@ -44,7 +65,6 @@
             <if test="id != null">id,</if>
             <if test="orderNo != null">order_no,</if>
             <if test="tableNum != null">table_num,</if>
-            <if test="time != null">time,</if>
             <if test="payTime != null">pay_time,</if>
             <if test="status != null">status,</if>
             <if test="businessId != null">business_id,</if>
@@ -61,7 +81,6 @@
             <if test="id != null">#{id},</if>
             <if test="orderNo != null">#{orderNo},</if>
             <if test="tableNum != null">#{tableNum},</if>
-            <if test="time != null">#{time},</if>
             <if test="payTime != null">#{payTime},</if>
             <if test="status != null">#{status},</if>
             <if test="businessId != null">#{businessId},</if>
@@ -84,9 +103,6 @@
             </if>
             <if test="tableNum != null">
                 table_num = #{tableNum},
-            </if>
-            <if test="time != null">
-                time = #{time},
             </if>
             <if test="payTime != null">
                 pay_time = #{payTime},

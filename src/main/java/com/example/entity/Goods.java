@@ -1,10 +1,13 @@
 package com.example.entity;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 
 /**
  * 商品
  */
+@Getter
 public class Goods {
     /** ID */
     private Integer id;
@@ -33,112 +36,56 @@ public class Goods {
     private String businessName;
     private String categoryName;
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public String getImg() {
-        return img;
     }
 
     public void setImg(String img) {
         this.img = img;
     }
 
-    public String getDescr() {
-        return descr;
-    }
-
     public void setDescr(String descr) {
         this.descr = descr;
-    }
-
-    public String getTaste() {
-        return taste;
     }
 
     public void setTaste(String taste) {
         this.taste = taste;
     }
 
-    public String getDate() {
-        return date;
-    }
-
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public Double getDiscount() {
-        return discount;
-    }
-
     public void setDiscount(Double discount) {
         this.discount = discount;
-    }
-
-    public Integer getBusinessId() {
-        return businessId;
     }
 
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public String getBusinessName() {
-        return businessName;
     }
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public BigDecimal getActualPrice() {
-        return actualPrice;
     }
 
     public void setActualPrice(BigDecimal actualPrice) {

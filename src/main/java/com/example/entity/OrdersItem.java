@@ -1,11 +1,14 @@
 package com.example.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * 订单详情表
  */
+@Getter
 public class OrdersItem implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,48 +25,24 @@ public class OrdersItem implements Serializable {
     /** 购买数量 */
     private BigDecimal num;
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
     }
 
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
-    public String getGoodsName() {
-        return goodsName;
-    }
-
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
-    }
-
-    public String getGoodsImg() {
-        return goodsImg;
     }
 
     public void setGoodsImg(String goodsImg) {
         this.goodsImg = goodsImg;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public BigDecimal getNum() {
-        return num;
     }
 
     public void setNum(BigDecimal num) {

@@ -1,10 +1,13 @@
 package com.example.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
 /**
  * 商品分类
  */
+@Getter
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -16,32 +19,16 @@ public class Category implements Serializable {
 
     private  String businessName;
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public Integer getBusinessId() {
-        return businessId;
-    }
-
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
-    }
-
-    public String getBusinessName() {
-        return businessName;
     }
 
     public void setBusinessName(String businessName) {

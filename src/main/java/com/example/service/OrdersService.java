@@ -1,21 +1,20 @@
 package com.example.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.IdUtil;
-import com.example.common.Result;
 import com.example.common.enums.OrderStatusEnum;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
+import com.example.dto.AmountDTO;
+import com.example.dto.CountByDayResponseDto;
+import com.example.dto.OrdersDTO;
 import com.example.entity.*;
 import com.example.exception.CustomException;
 import com.example.mapper.OrdersMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class OrdersService {
@@ -168,4 +163,10 @@ public class OrdersService {
 //         清空购物车
         cartService.deleteCart(userId, businessId);
     }
+
+    /**统计商家近七天的销售金额*/
+    public List<CountByDayResponseDto> countByDay(String businessId) {
+        return ordersMapper.countByDay(businessId);
+    }
+
 }

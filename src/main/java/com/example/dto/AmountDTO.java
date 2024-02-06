@@ -1,7 +1,10 @@
-package com.example.entity;
+package com.example.dto;
+
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 public class AmountDTO {
 //    总价
     private BigDecimal amount;
@@ -10,24 +13,12 @@ public class AmountDTO {
 //    实际价格
     private BigDecimal actual;
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
     public void setDiscount(BigDecimal discount) {
         this.discount = discount;
-    }
-
-    public BigDecimal getActual() {
-        return actual;
     }
 
     public void setActual(BigDecimal actual) {

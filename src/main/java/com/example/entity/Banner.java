@@ -1,10 +1,13 @@
 package com.example.entity;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
 /**
  * 广告信息
  */
+@Getter
 public class Banner implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -19,40 +22,20 @@ public class Banner implements Serializable {
 
     private String businessName;
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getImg() {
-        return img;
-    }
-
     public void setImg(String img) {
         this.img = img;
     }
 
-    public Integer getBusinessId() {
-        return businessId;
-    }
-
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
-    }
-
-    public String getBusinessName() {
-        return businessName;
     }
 
     public void setBusinessName(String businessName) {

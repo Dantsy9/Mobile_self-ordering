@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.entity.AmountDTO;
+import com.example.dto.AmountDTO;
 import com.example.entity.Cart;
 import com.example.service.CartService;
 import com.github.pagehelper.PageInfo;

@@ -3,8 +3,9 @@ package com.example.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import com.example.common.Result;
+import com.example.dto.CountByDayResponseDto;
 import com.example.entity.Orders;
-import com.example.entity.OrdersDTO;
+import com.example.dto.OrdersDTO;
 import com.example.entity.OrdersItem;
 import com.example.service.OrdersItemService;
 import com.example.service.OrdersService;
@@ -81,6 +82,15 @@ public class OrdersController {
     public Result selectById(@PathVariable Integer id) {
         Orders orders = ordersService.selectById(id);
         return Result.success(orders);
+    }
+
+    /**
+     * 根据商家Id统计近七天数据
+     */
+    @GetMapping("/countByDay/{businessId}")
+    public Result countByDay(@PathVariable String businessId) {
+        List<CountByDayResponseDto> list = ordersService.countByDay(businessId);
+        return Result.success(list);
     }
 
     /**

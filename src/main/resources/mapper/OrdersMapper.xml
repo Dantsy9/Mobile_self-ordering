@@ -55,6 +55,22 @@
                            on orders.user_id = user.id
         where orders.id = #{id}
     </select>
+    <select id="countByDay" resultType="com.example.dto.CountByDayResponseDto">
+        select a.date as day_time, IFNULL(b.actual,0) as actual
+        from
+        (
+        select (@s:=@s+1) as id,STR_TO_DATE(DATE(DATE_SUB(CURRENT_DATE,interval @s day)),'%Y-%c-%d') as date
+        from information_schema.CHARACTER_SETS,(select @s:=0) AS init where @s &lt; 7 order by date
+        ) a
+        left join
+        (
+        select DATE_FORMAT(pay_time,'%Y-%m-%d') as time, SUM(actual) as actual, business_id
+        from orders
+        where business_id = #{businessId} and `status` = '已完成'
+        group by time
+        ) b
+        on a.date = b.time
+    </select>
 
     <delete id="deleteById">
         delete

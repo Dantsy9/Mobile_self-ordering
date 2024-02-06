@@ -1,7 +1,10 @@
 package com.example.entity;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 
+@Getter
 public class Cart {
     /** ID */
     private Integer id;
@@ -17,56 +20,28 @@ public class Cart {
 
     private Goods goods;
 
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getGoodsId() {
-        return goodsId;
     }
 
     public void setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
     }
 
-    public Integer getNum() {
-        return num;
-    }
-
     public void setNum(Integer num) {
         this.num = num;
-    }
-
-    public Integer getUserId() {
-        return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public Integer getBusinessId() {
-        return businessId;
-    }
-
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 
-    public Goods getGoods() {
-        return goods;
-    }
-
     public void setGoods(Goods goods) {
         this.goods = goods;
-    }
-
-    public Business getBusiness() {
-        return business;
     }
 
     public void setBusiness(Business business) {

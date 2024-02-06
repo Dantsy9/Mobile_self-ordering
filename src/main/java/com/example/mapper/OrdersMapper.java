@@ -1,5 +1,6 @@
 package com.example.mapper;
 
+import com.example.dto.CountByDayResponseDto;
 import com.example.entity.Orders;
 
 import java.util.List;
@@ -31,4 +32,5 @@ public interface OrdersMapper {
      */
     List<Orders> selectAll(Orders orders);
 
+    List<CountByDayResponseDto> countByDay(String businessId);
 }

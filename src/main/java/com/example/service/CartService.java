@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.AmountDTO;
+import com.example.dto.AmountDTO;
 import com.example.entity.Business;
 import com.example.entity.Cart;
 import com.example.entity.Goods;

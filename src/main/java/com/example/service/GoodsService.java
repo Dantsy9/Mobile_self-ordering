@@ -2,6 +2,7 @@ package com.example.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.example.common.enums.RoleEnum;
+import com.example.dto.res.countByBusinessIdResponseDto;
 import com.example.entity.Account;
 import com.example.entity.Category;
 import com.example.entity.Goods;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -131,6 +133,14 @@ public class GoodsService {
             wrapGoods(g);
         }
         return PageInfo.of(list);
+    }
+
+    public List<countByBusinessIdResponseDto> countByBusinessId(String businessId) {
+        //获取当前日期
+        LocalDate nowTime = LocalDate.now();
+        //获取上个月的today
+        LocalDate lastMonthToday = nowTime.minusMonths(1);
+        return goodsMapper.goodsCount(businessId,nowTime,lastMonthToday);
     }
 
 }

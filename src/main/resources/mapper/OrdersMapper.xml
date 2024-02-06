@@ -55,7 +55,7 @@
                            on orders.user_id = user.id
         where orders.id = #{id}
     </select>
-    <select id="countByDay" resultType="com.example.dto.CountByDayResponseDto">
+    <select id="countByDay" resultType="com.example.dto.res.CountByDayResponseDto">
         select a.date as day_time, IFNULL(b.actual,0) as actual
         from
         (

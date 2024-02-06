@@ -6,10 +6,14 @@ import cn.hutool.core.util.IdUtil;
 import com.example.common.enums.OrderStatusEnum;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
-import com.example.dto.AmountDTO;
-import com.example.dto.CountByDayResponseDto;
-import com.example.dto.OrdersDTO;
-import com.example.entity.*;
+import com.example.dto.res.AmountDTO;
+import com.example.dto.res.CountByDayResponseDto;
+import com.example.dto.res.CountByMonthResponseDto;
+import com.example.dto.res.OrdersDTO;
+import com.example.entity.Account;
+import com.example.entity.Cart;
+import com.example.entity.Orders;
+import com.example.entity.OrdersItem;
 import com.example.exception.CustomException;
 import com.example.mapper.OrdersMapper;
 import com.example.utils.TokenUtils;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -167,6 +172,14 @@ public class OrdersService {
     /**统计商家近七天的销售金额*/
     public List<CountByDayResponseDto> countByDay(String businessId) {
         return ordersMapper.countByDay(businessId);
+    }
+
+    public List<CountByMonthResponseDto> countByMonth() {
+        //获取当前日期
+        LocalDate nowTime = LocalDate.now();
+        //获取上个月的today
+        LocalDate lastMonthToday = nowTime.minusMonths(1);
+        return ordersMapper.countByMonth(nowTime, lastMonthToday);
     }
 
 }

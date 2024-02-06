@@ -1,8 +1,12 @@
 package com.example.mapper;
 
-import com.example.dto.CountByDayResponseDto;
+import com.example.dto.res.CountByDayResponseDto;
+import com.example.dto.res.CountByMonthResponseDto;
 import com.example.entity.Orders;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface OrdersMapper {
@@ -33,4 +37,11 @@ public interface OrdersMapper {
     List<Orders> selectAll(Orders orders);
 
     List<CountByDayResponseDto> countByDay(String businessId);
+
+    @Select("SELECT IFNULL(SUM(b.actual), 0) as asctual , a.name as businessName" +
+            " FROM business a" +
+            " left JOIN orders b on b.business_id = a.id" +
+            " where b.status  = '已完成' and b.pay_time BETWEEN #{startTime} and #{endTime}" +
+            " group by a.name")
+    List<CountByMonthResponseDto> countByMonth(@Param("startTime")LocalDate startTime,@Param("endTime")LocalDate endTime);
 }

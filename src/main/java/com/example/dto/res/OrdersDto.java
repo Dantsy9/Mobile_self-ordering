@@ -3,7 +3,7 @@ package com.example.dto.res;
 import lombok.Getter;
 
 @Getter
-public class OrdersDTO {
+public class OrdersDto {
 
     private Integer businessId;
 //    订单桌号

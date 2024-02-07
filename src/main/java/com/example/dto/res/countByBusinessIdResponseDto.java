@@ -2,11 +2,6 @@ package com.example.dto.res;
 
 import lombok.Data;
 
-/**
- * @Author: zhuangmch
- * @CreateTime: 2024-02-06
-
- */
 @Data
 public class countByBusinessIdResponseDto {
 

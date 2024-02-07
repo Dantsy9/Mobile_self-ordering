@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.dto.res.AmountDTO;
+import com.example.dto.res.AmountDto;
 import com.example.entity.Business;
 import com.example.entity.Cart;
 import com.example.entity.Goods;
@@ -101,7 +101,7 @@ public class CartService {
     /**
      * 计算购物车总价
      */
-    public AmountDTO calc(Integer userId, Integer businessId) {
+    public AmountDto calc(Integer userId, Integer businessId) {
         Cart cart =new Cart();
         cart.setUserId(userId);
         cart.setBusinessId(businessId);
@@ -120,7 +120,7 @@ public class CartService {
                 actual = actual.add(actualPrice.multiply(BigDecimal.valueOf(c.getNum())));
             }
         }
-        AmountDTO amountDTO = new AmountDTO();
+        AmountDto amountDTO = new AmountDto();
         amountDTO.setAmount(amount);
         amountDTO.setActual(actual);
 //        优惠金额

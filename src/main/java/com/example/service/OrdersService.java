@@ -6,10 +6,10 @@ import cn.hutool.core.util.IdUtil;
 import com.example.common.enums.OrderStatusEnum;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
-import com.example.dto.res.AmountDTO;
+import com.example.dto.res.AmountDto;
 import com.example.dto.res.CountByDayResponseDto;
 import com.example.dto.res.CountByMonthResponseDto;
-import com.example.dto.res.OrdersDTO;
+import com.example.dto.res.OrdersDto;
 import com.example.entity.Account;
 import com.example.entity.Cart;
 import com.example.entity.Orders;
@@ -115,7 +115,7 @@ public class OrdersService {
      * 用户下单
      */
     @Transactional
-    public void addOrder(OrdersDTO ordersDTO) {
+    public void addOrder(OrdersDto ordersDTO) {
         Integer businessId = ordersDTO.getBusinessId();
         Account currentUser = TokenUtils.getCurrentUser();
         Integer userId = currentUser.getId();
@@ -138,7 +138,7 @@ public class OrdersService {
         orders.setComment(ordersDTO.getRemark());
 
 //        设置商品信息
-        AmountDTO amountDTO = cartService.calc(userId, businessId);
+        AmountDto amountDTO = cartService.calc(userId, businessId);
         orders.setAmount(amountDTO.getAmount());
         orders.setDiscount(amountDTO.getDiscount());
         orders.setActual(amountDTO.getActual());
@@ -174,12 +174,15 @@ public class OrdersService {
         return ordersMapper.countByDay(businessId);
     }
 
+    /**
+     *获取上个月的日期
+     */
     public List<CountByMonthResponseDto> countByMonth() {
         //获取当前日期
         LocalDate nowTime = LocalDate.now();
         //获取上个月的today
         LocalDate lastMonthToday = nowTime.minusMonths(1);
-        return ordersMapper.countByMonth(nowTime, lastMonthToday);
+        return ordersMapper.countByMonth(lastMonthToday, nowTime);
     }
 
 }

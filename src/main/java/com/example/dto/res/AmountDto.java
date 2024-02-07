@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class AmountDTO {
+public class AmountDto {
 //    总价
     private BigDecimal amount;
 //    优惠金额

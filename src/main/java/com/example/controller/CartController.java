@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.dto.res.AmountDTO;
+import com.example.dto.res.AmountDto;
 import com.example.entity.Cart;
 import com.example.service.CartService;
 import com.github.pagehelper.PageInfo;
@@ -89,7 +89,7 @@ public class CartController {
      */
     @GetMapping("/calc")
     public Result calc(@RequestParam Integer userId, @RequestParam Integer businessId) {
-        AmountDTO amountDTO = cartService.calc(userId, businessId);
+        AmountDto amountDTO = cartService.calc(userId, businessId);
         return Result.success(amountDTO);
     }
 

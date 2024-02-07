@@ -4,8 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import com.example.common.Result;
 import com.example.dto.res.CountByDayResponseDto;
+import com.example.dto.res.CountByMonthResponseDto;
 import com.example.entity.Orders;
-import com.example.dto.res.OrdersDTO;
+import com.example.dto.res.OrdersDto;
 import com.example.entity.OrdersItem;
 import com.example.service.OrdersItemService;
 import com.example.service.OrdersService;
@@ -43,7 +44,7 @@ public class OrdersController {
      * 新增
      */
     @PostMapping("/addOrder")
-    public Result addOrder(@RequestBody OrdersDTO ordersDTO) {
+    public Result addOrder(@RequestBody OrdersDto ordersDTO) {
         ordersService.addOrder(ordersDTO);
         return Result.success();
     }
@@ -85,15 +86,6 @@ public class OrdersController {
     }
 
     /**
-     * 根据商家Id统计近七天数据
-     */
-    @GetMapping("/countByDay/{businessId}")
-    public Result countByDay(@PathVariable String businessId) {
-        List<CountByDayResponseDto> list = ordersService.countByDay(businessId);
-        return Result.success(list);
-    }
-
-    /**
      * 查询所有
      */
     @GetMapping("/selectAll")
@@ -111,6 +103,24 @@ public class OrdersController {
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         PageInfo<Orders> page = ordersService.selectPage(orders, pageNum, pageSize);
         return Result.success(page);
+    }
+
+    /**
+     * 根据商家Id统计近七天数据
+     */
+    @GetMapping("/countByDay/{businessId}")
+    public Result countByDay(@PathVariable String businessId) {
+        List<CountByDayResponseDto> list = ordersService.countByDay(businessId);
+        return Result.success(list);
+    }
+
+    /**
+     * 统计所有商家上月总销售额
+     */
+    @GetMapping("/countByMonth")
+    public Result countByMonth() {
+        List<CountByMonthResponseDto> list = ordersService.countByMonth();
+        return Result.success(list);
     }
 
     @GetMapping("/chart")

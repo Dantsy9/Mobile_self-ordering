@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
+import com.example.dto.res.countByBusinessIdResponseDto;
 import com.example.entity.Goods;
 import com.example.service.GoodsService;
 import com.github.pagehelper.PageInfo;
@@ -81,6 +82,15 @@ public class GoodsController {
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         PageInfo<Goods> page = goodsService.selectPage(goods, pageNum, pageSize);
         return Result.success(page);
+    }
+
+    /**
+     * 根据商家ID统计上月菜品销售情况
+     */
+    @GetMapping("/goodsCount/{businessId}")
+    public Result goodsCount(@PathVariable String businessId) {
+        List<countByBusinessIdResponseDto> list = goodsService.countByBusinessId(businessId);
+        return Result.success(list);
     }
 
 }

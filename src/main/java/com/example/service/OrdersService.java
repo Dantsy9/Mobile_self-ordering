@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
@@ -114,7 +115,7 @@ public class OrdersService {
     /**
      * 用户下单
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addOrder(OrdersDto ordersDTO) {
         Integer businessId = ordersDTO.getBusinessId();
         Account currentUser = TokenUtils.getCurrentUser();
@@ -180,9 +181,11 @@ public class OrdersService {
     public List<CountByMonthResponseDto> countByMonth() {
         //获取当前日期
         LocalDate nowTime = LocalDate.now();
-        //获取上个月的today
-        LocalDate lastMonthToday = nowTime.minusMonths(1);
-        return ordersMapper.countByMonth(lastMonthToday, nowTime);
+        // 获取上个月的月初日期
+        LocalDate firstDayOfLastMonth = nowTime.minusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+        // 获取上个月的月末日期
+        LocalDate lastDayOfLastMonth = nowTime.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        return ordersMapper.countByMonth(firstDayOfLastMonth, lastDayOfLastMonth);
     }
 
 }

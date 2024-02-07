@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 /**
@@ -138,9 +139,11 @@ public class GoodsService {
     public List<countByBusinessIdResponseDto> countByBusinessId(String businessId) {
         //获取当前日期
         LocalDate nowTime = LocalDate.now();
-        //获取上个月的today
-        LocalDate lastMonthToday = nowTime.minusMonths(1);
-        return goodsMapper.goodsCount(businessId,nowTime,lastMonthToday);
+        // 获取上个月的月初日期
+        LocalDate firstDayOfLastMonth = nowTime.minusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+        // 获取上个月的月末日期
+        LocalDate lastDayOfLastMonth = nowTime.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+        return goodsMapper.goodsCount(businessId,firstDayOfLastMonth,lastDayOfLastMonth);
     }
 
 }

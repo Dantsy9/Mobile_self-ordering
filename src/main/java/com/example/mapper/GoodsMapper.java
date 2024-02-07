@@ -41,8 +41,8 @@ public interface GoodsMapper {
     @Select("SELECT a.name AS goodName, IFNULL(SUM(b.num),0) AS goodsCount " +
             " FROM goods a" +
             " LEFT JOIN orders_item b on b.goods_name = a.name" +
-            " LEFT JOIN orders c on c.business_id = a.business_id" +
-            " WHERE a.business_id = #{businessId} AND c.pay_time BETWEEN #{startTime} and #{endTime} " +
+            " LEFT JOIN orders c on c.business_id = a.business_id AND c.pay_time BETWEEN #{startTime} and #{endTime} " +
+            " WHERE a.business_id = #{businessId}" +
             " GROUP BY a.name")
     List<countByBusinessIdResponseDto> goodsCount(@Param("businessId")String businessId, @Param("startTime")LocalDate startTime, @Param("endTime") LocalDate endTime);
 

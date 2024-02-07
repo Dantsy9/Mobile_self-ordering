@@ -40,8 +40,8 @@ public interface OrdersMapper {
 
     @Select("SELECT a.name as businessName, IFNULL(SUM(b.actual), 0) as actual" +
             " FROM business a" +
-            " left JOIN orders b on b.business_id = a.id" +
-            " where b.status  = '已完成' and b.pay_time BETWEEN #{startTime} and #{endTime}" +
+            " left JOIN orders b on b.business_id = a.id and b.pay_time BETWEEN #{startTime} and #{endTime}" +
+            " and b.status  = '已完成'" +
             " group by a.name")
     List<CountByMonthResponseDto> countByMonth(@Param("startTime")LocalDate startTime, @Param("endTime")LocalDate endTime);
 }

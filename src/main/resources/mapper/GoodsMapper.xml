@@ -28,9 +28,23 @@
 
     <select id="selectById" resultType="com.example.entity.Goods">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from goods
         where id = #{id}
+    </select>
+
+    <select id="goodsCount" resultType="com.example.dto.res.countByBusinessIdResponseDto">
+        select goods.name as goodName , ifnull(a.nums, 0) as goodsCount
+        from goods
+        left join (
+            select i.goods_name as goodsName, ifnull(sum(num), 0) as nums
+            from orders_item i
+            left join orders o on i.order_id = o.id
+            where o.status = '已完成' and o.business_id = #{businessId} and o.pay_time between #{startTime} and #{endTime}
+            group by i.goods_name
+        ) a
+        on goods.name = a.goodsName
+        where goods.business_id = #{businessId}
     </select>
 
     <delete id="deleteById">

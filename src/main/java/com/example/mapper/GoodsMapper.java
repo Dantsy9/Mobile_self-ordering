@@ -38,12 +38,7 @@ public interface GoodsMapper {
      */
     List<Goods> selectAll(Goods goods);
 
-    @Select("SELECT a.name AS goodName, IFNULL(SUM(b.num),0) AS goodsCount " +
-            " FROM goods a" +
-            " LEFT JOIN orders_item b on b.goods_name = a.name" +
-            " LEFT JOIN orders c on c.business_id = a.business_id AND c.pay_time BETWEEN #{startTime} and #{endTime} " +
-            " WHERE a.business_id = #{businessId}" +
-            " GROUP BY a.name")
-    List<countByBusinessIdResponseDto> goodsCount(@Param("businessId")String businessId, @Param("startTime")LocalDate startTime, @Param("endTime") LocalDate endTime);
+    /**根据商家id统计 上月菜品销售数量*/
+    List<countByBusinessIdResponseDto> goodsCount(String businessId, LocalDate startTime, LocalDate endTime);
 
 }
